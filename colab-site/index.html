@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jujutsu Experience</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            background-color: #050505;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body { height: 300vh; } /* Seções 1, 2 e 3 */
+
+        /* --- CONTAINER FIXO --- */
+        .sticky-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* --- VÍDEO --- */
+        .video-container {
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            width: 200px;
+            height: 120px;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease-in-out; /* Transição de opacidade mais longa */
+            opacity: 0.6;
+            z-index: 5;
+        }
+
+        .video-background {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-expanded {
+            width: 70vw !important;
+            height: 70vh !important;
+            bottom: 15% !important;
+            right: 15% !important;
+            border-radius: 30px !important;
+            opacity: 1 !important;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        /* --- LOGO --- */
+        .logo-container {
+            width: 500px; 
+            height: 150px;
+            -webkit-mask-image: url('logo-jujutsu1.webp');
+            mask-image: url('logo-jujutsu1.webp');
+            -webkit-mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            background: #111;
+            filter: brightness(0.2);
+            animation: ganharLuz 6s steps(3) forwards;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            position: relative;
+        }
+
+        .logo-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -150%; width: 300%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: iluminar 2s ease-in-out 3;
+        }
+
+        /* --- UI (TEXTO E BOTÕES) --- */
+        .ui-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: aparecerUI 1s ease-out 6.2s forwards;
+            pointer-events: auto;
+            z-index: 15;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .btn {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            margin: 0 10px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.15);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Classes de Controle */
+        .fade-out-element {
+            opacity: 0 !important;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+
+        .video-fade-out {
+            opacity: 0 !important;
+        }
+
+        section { height: 100vh; }
+
+        @keyframes iluminar { from { transform: translateX(0%); } to { transform: translateX(100%); } }
+        @keyframes ganharLuz { to { background: #fff; filter: brightness(1); } }
+        @keyframes aparecerUI { to { opacity: 1; transform: translateY(-20px); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="mainWrapper" class="sticky-wrapper">
+        <div id="logo" class="logo-container"></div>
+        
+        <div id="ui" class="ui-content">
+            <p style="letter-spacing: 3px; margin: 15px 0; font-size: 0.8rem; color: #ccc; text-transform: uppercase;">
+                conheça os maiores feiticeiros jujutsu
+            </p>
+            <div>
+                <button class="btn">I</button>
+                <button class="btn">II</button>
+                <button class="btn">III</button>
+            </div>
+        </div>
+
+        <div id="videoBox" class="video-container">
+            <video id="meuVideo" class="video-background" muted loop playsinline>
+                <source src="opening.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <section id="sec1"></section>
+    <section id="sec2"></section>
+    <section id="sec3"></section>
+
+    <script>
+        const video = document.getElementById('meuVideo');
+        const videoBox = document.getElementById('videoBox');
+        const logo = document.getElementById('logo');
+        const ui = document.getElementById('ui');
+
+        window.addEventListener('scroll', () => {
+            const scroll = window.scrollY;
+            const height = window.innerHeight;
+
+            // --- LÓGICA DA SEÇÃO 2 (EXPANSÃO E SUMIÇO DA LOGO/BOTÕES) ---
+            if (scroll > 100 && scroll < height * 1.8) {
+                videoBox.classList.add('video-expanded');
+                videoBox.classList.remove('video-fade-out'); // Garante que esteja visível na Sec 2
+                video.play();
+                
+                logo.classList.add('fade-out-element');
+                ui.classList.add('fade-out-element');
+            } 
+            // --- VOLTANDO AO TOPO ---
+            else if (scroll <= 100) {
+                videoBox.classList.remove('video-expanded');
+                video.pause();
+                
+                logo.classList.remove('fade-out-element');
+                ui.classList.remove('fade-out-element');
+            }
+
+            // --- LÓGICA DA SEÇÃO 3 (SUMIÇO SUAVE DO VÍDEO) ---
+            if (scroll >= height * 1.8) {
+                videoBox.classList.add('video-fade-out');
+            }
+        });
+    </script>
+
+</body>
+</html>

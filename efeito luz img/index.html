@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #050505;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Container da Logo */
+        .logo-container {
+            position: relative;
+            width: 600px; 
+            height: 180px;
+            
+            -webkit-mask-image: url('logo-jujutsu1.webp');
+            mask-image: url('logo-jujutsu1.webp');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+
+            background: #111;
+            filter: brightness(0.2);
+            
+            /* Animações: Brilho (3x) e Subida acentuada */
+            animation: 
+                ganharLuz 6s steps(3) forwards, 
+                subirLogo 1.2s cubic-bezier(0.4, 0, 0.2, 1) 6.2s forwards;
+        }
+
+        /* Feixe de luz suave */
+        .logo-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150%; 
+            width: 300%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.4) 45%, 
+                rgba(255, 255, 255, 0.7) 50%, 
+                rgba(255, 255, 255, 0.4) 55%, 
+                transparent 100%
+            );
+            animation: iluminarTresVezes 2s ease-in-out 3 forwards;
+        }
+
+        /* Texto Centralizado */
+        .texto-informativo {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 55px;
+            opacity: 0;
+            transform: translateY(20px);
+            /* Aparece junto com os botões */
+            animation: aparecerConteudo 1s ease-out 6.8s forwards;
+        }
+
+        /* Container dos Botões */
+        .button-wrapper {
+            display: flex;
+            gap: 25px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: aparecerConteudo 1s ease-out 7s forwards;
+        }
+
+        .btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transform: scale(1.15) translateY(-5px);
+        }
+
+        /* KEYFRAMES */
+
+        @keyframes iluminarTresVezes {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes ganharLuz {
+            0% { background: #111; filter: brightness(0.2); }
+            33% { background: #333; filter: brightness(0.4); }
+            66% { background: #666; filter: brightness(0.7); }
+            100% { 
+                background: #fff598; 
+                filter: brightness(1) drop-shadow(0 0 8px rgba(255,255,255,0.2)); 
+            }
+        }
+
+        @keyframes subirLogo {
+            to { 
+                transform: translateY(-100px); /* Subiu um pouco mais */
+                filter: brightness(1) drop-shadow(0 0 15px rgba(255,255,255,0.4));
+            }
+        }
+
+        @keyframes aparecerConteudo {
+            to { 
+                opacity: 1; 
+                transform: translateY(-40px); /* Move o bloco todo para cima */
+            }
+
+            
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container"></div>
+
+    <div class="texto-informativo">
+        conheça os maiores feiticeiros jujutsu
+    </div>
+
+    <div class="button-wrapper">
+        <button class="btn">I</button>
+        <button class="btn">II</button>
+        <button class="btn">III</button>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+body{
+    background-color: black;
+}
+
+/* Aqui é onde definimos o comportmento visual.O segredo é a transição suave*/
+
+/*estilos das seções : Apenas para dar altura (scroll) ao site*/
+section{
+    height: 100vh;/* oque define a altura do elemento - vh= Altura da janela de visualização */
+    display: flex;/* Ativa o modelo de layot chamado flexbox = container flexivel*/
+    align-items: center;/* alinha os elementos no eixo vertical */
+    justify-content: center;/* alinha os elementos no eixo horizontal */
+}
+/* O "Corpo" do Vídeo (Estado Inicial) */
+.video-wrapper {
+    position: fixed;      /* Fixa o vídeo na tela, ignorando o scroll */
+    bottom: 20px;         /* Distância do fundo */
+    right: 20px;          /* Distância da direita */
+    width: 250px;         /* Largura inicial */
+    height: 150px;        /* Altura inicial */
+    z-index: 10;          /* Fica por cima de outros elementos */
+    border-radius: 12px;  /* Bordas arredondadas */
+    overflow: hidden;     /* Garante que o vídeo não saia das bordas */
+    background-color: #00000000; 
+    
+    /* A LINHA MAIS IMPORTANTE: Define que QUALQUER mudança (largura, posição) 
+       levará 0.7 segundos para acontecer, de forma suave. */
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.video-wrapper video {
+    width: 100%;
+    height: 100%;
+    /* Mantém o vídeo inteiro dentro do container, sem cortar as bordas */
+    object-fit: contain; 
+}
+
+/* Classe de Expansão (Ativada via JavaScript) */
+.video-wrapper.expanded {
+    width: 60%;           /* O vídeo cresce para 80% da largura da tela */
+    height: 70%;          /* O vídeo cresce para 70% da altura da tela */
+    
+    /* Centralização Mágica: */
+    bottom: 50%;          /* Move o ponto inferior para o meio da tela */
+    right: 50%;           /* Move o ponto lateral para o meio da tela */
+    transform: translate(50%, 50%); /* Recua o elemento metade do seu próprio tamanho para centralizar */
+    
+    border-radius: 40px;  /* Borda levemente maior quando grande */
+}
+
+/* Classe para sumir (Quando passamos da Seção 2) */
+.video-wrapper.hidden {
+    opacity: 0;           /* Torna invisível */
+    pointer-events: none; /* Impede que o usuário clique nele sem querer */
+}

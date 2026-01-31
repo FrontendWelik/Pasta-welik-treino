@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Precisamos do container que viaja pela pagina e seções para marcar o progresso-->
+
+    <section class="section-one"><!-- sec 1 - video pequeno ao lado-->
+         <div class="content-text"><!-- div dos textos-->
+            <img src="logo-jujutsu1.webp" alt="">
+            <p>O video começa aqui em baixo , á direita</p>
+         </div><!-- div dos textos-->
+
+         <div class="video-wrapper" id="videoWrapper"><!-- div do video-->
+            <video id="myVideo" autoplay muted loop playsinline>
+                <source src="opening.mp4" type="video/mp4"><!-- tag que contem o video-->
+            </video><!-- div do video-->
+
+         </div><!-- div do video-->
+    </section><!-- sec 1 - video pequeno ao lado-->
+
+    <section class="section-two" id="triggerSection"><!-- sec 2 video fica grande -->
+        <div class="content-text">
+            <h2>Seção 2</h2>
+            <p>O video agora cresceu e centralizou</p>
+        </div>
+    </section><!-- sec 2 video fica grande -->
+
+    <section class="section-two" id="triggerSection"><!-- sec 2 video fica grande -->
+        <div class="content-text">
+            <h2>Seção 2</h2>
+            <p>O video agora cresceu e centralizou</p>
+        </div>
+    </section><!-- sec 2 video fica grande -->
+
+    
+</body>
+<script src="script.js"></script>
+</html>
