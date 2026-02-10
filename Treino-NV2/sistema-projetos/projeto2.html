@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Projetos Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #05061b; color: #ffffff; }
+        .bg-sidebar { background-color: #0a0b2e; }
+        .bg-card { background: linear-gradient(145deg, #121440, #0a0b2e); }
+        .gold-border { border: 1px solid rgba(245, 158, 11, 0.3); }
+        .active-tab { background-color: #fbbf24; color: #000; }
+        
+        input, select { 
+            background: #05051a !important; 
+            border: 1px solid rgba(245, 158, 11, 0.4) !important; 
+            color: white; 
+            outline: none;
+        }
+        input:focus { border-color: #fbbf24 !important; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 10px; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-sidebar border-r border-amber-500/30 flex flex-col p-6 justify-between shrink-0">
+        <div class="space-y-4">
+            <div class="active-tab font-bold py-2 px-6 rounded-full text-center shadow-lg">PROJETOS</div>
+            <div class="text-gray-400 hover:text-white py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer transition">TIME</div>
+            <div class="text-gray-400 hover:text-white py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer transition">FINANÇAS</div>
+            <div class="text-gray-400 hover:text-white py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer transition">LIXEIRA</div>
+            <div class="text-gray-400 hover:text-white py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer transition">CALENDÁRIO</div>
+        </div>
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-10 h-10 bg-gray-600 rounded-full border gold-border flex items-center justify-center">👤</div>
+            <span class="text-amber-500/50 cursor-pointer">🔍</span>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-10 overflow-y-auto">
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold tracking-widest uppercase">Projetos</h1>
+                <input type="text" class="rounded-full px-4 py-1 w-48 text-sm" placeholder="Buscar projeto...">
+            </div>
+
+            <div id="section-1" class="space-y-4">
+                <div id="project-list" class="space-y-4">
+                    </div>
+                <div class="flex justify-end mt-8">
+                    <button onclick="openCreate()" class="gold-border text-amber-400 px-8 py-2 rounded-lg text-sm font-bold hover:bg-amber-500 hover:text-black transition">
+                        NOVO PROJETOS +
+                    </button>
+                </div>
+            </div>
+
+            <div id="section-2" class="hidden">
+                <div class="bg-card gold-border p-8 rounded-3xl relative">
+                    <button onclick="openEdit()" class="absolute top-6 right-6 text-xl hover:scale-110 transition">✏️</button>
+                    <div class="flex gap-8">
+                        <img id="v-img" src="https://via.placeholder.com/80" class="w-20 h-20 rounded-full border-2 border-amber-500 object-cover">
+                        <div class="grid grid-cols-2 gap-x-12 gap-y-6 w-full">
+                            <div><p class="text-gray-500 text-[10px] uppercase">ID#</p><p id="v-id" class="font-bold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Nome</p><p id="v-nome" class="font-bold text-amber-500"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Início</p><p id="v-inicio" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Término</p><p id="v-termino" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Desenvolvedor</p><p id="v-dev" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Tipo</p><p id="v-tipo" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Valor</p><p id="v-valor" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Pagamento</p><p id="v-pag" class="font-semibold"></p></div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="showSection(1)" class="mt-6 text-gray-500 text-sm hover:text-amber-500 transition">← Voltar para a lista</button>
+            </div>
+
+            <div id="section-3" class="hidden">
+                <div class="bg-card gold-border p-8 rounded-3xl">
+                    <div class="flex items-center gap-6 mb-8">
+                        <div class="relative group">
+                            <img id="i-preview" src="https://via.placeholder.com/80" class="w-20 h-20 rounded-full object-cover border gold-border">
+                            <input type="file" id="i-file" class="hidden" onchange="previewImage(this)">
+                            <button onclick="document.getElementById('i-file').click()" class="absolute bottom-0 right-0 bg-amber-500 text-black text-[10px] p-1 rounded-full font-bold uppercase">Foto</button>
+                        </div>
+                        <h2 id="form-title" class="font-bold text-amber-500 tracking-widest">NOVO PROJETO</h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">ID#</label>
+                            <input type="text" id="i-id" class="p-2 rounded-lg text-sm"></div>
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">NOME</label>
+                            <input type="text" id="i-nome" class="p-2 rounded-lg text-sm"></div>
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">DATA INÍCIO</label>
+                            <input type="date" id="i-inicio" class="p-2 rounded-lg text-sm"></div>
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">DATA TÉRMINO</label>
+                            <input type="date" id="i-fim" class="p-2 rounded-lg text-sm"></div>
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">DESENVOLVEDOR</label>
+                            <input type="text" id="i-dev" class="p-2 rounded-lg text-sm"></div>
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">TIPO DE PROJETO</label>
+                            <select id="i-tipo" class="p-2 rounded-lg text-sm">
+                                <option value="Landing Page">Landing Page</option>
+                                <option value="E-commerce">E-commerce</option>
+                                <option value="SaaS / Web App">SaaS / Web App</option>
+                                <option value="Portfólio">Portfólio</option>
+                                <option value="Manutenção">Manutenção</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">VALOR (CUSTO)</label>
+                            <input type="number" id="i-valor" class="p-2 rounded-lg text-sm" placeholder="0.00"></div>
+                        <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">PAGAMENTO</label>
+                            <div class="flex gap-2">
+                                <select id="i-pag-tipo" class="p-2 rounded-lg text-sm flex-1" onchange="toggleParcelas()">
+                                    <option value="À Vista">À Vista</option>
+                                    <option value="Parcelado">Parcelado</option>
+                                </select>
+                                <input type="number" id="i-parcelas" class="p-2 rounded-lg text-sm w-20 hidden" placeholder="Vezes">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-6 mt-10">
+                        <button onclick="showSection(1)" class="border border-red-500 text-red-500 px-10 py-2 rounded-full font-bold uppercase text-xs hover:bg-red-500 hover:text-white transition">Cancelar</button>
+                        <button onclick="saveProject()" class="bg-green-600 text-white px-10 py-2 rounded-full font-bold uppercase text-xs hover:bg-green-500 transition shadow-lg">Salvar</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let projects = [
+            { id: "001", nome: "Site Institucional", inicio: "2024-02-01", fim: "2024-03-01", dev: "Lucas Lima", tipo: "Landing Page", valor: "2500", pag: "À Vista", img: "https://i.pravatar.cc/150?u=1" }
+        ];
+        let currentEditingId = null;
+
+        function showSection(n) {
+            [1,2,3].forEach(s => document.getElementById(`section-${s}`).classList.add('hidden'));
+            document.getElementById(`section-${n}`).classList.remove('hidden');
+            if(n === 1) renderList();
+        }
+
+        function renderList() {
+            const list = document.getElementById('project-list');
+            list.innerHTML = projects.map((p, index) => `
+                <div onclick="openView(${index})" class="bg-card gold-border p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-amber-500 transition shadow-md">
+                    <div class="flex items-center gap-4">
+                        <img src="${p.img}" class="w-10 h-10 rounded-full border border-amber-500/30 object-cover">
+                        <span class="font-bold text-sm tracking-wide">${p.nome.toUpperCase()}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] text-gray-500 uppercase font-bold">Status</span>
+                        <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openView(index) {
+            const p = projects[index];
+            currentEditingId = index;
+            document.getElementById('v-id').innerText = `#${p.id}`;
+            document.getElementById('v-nome').innerText = p.nome;
+            document.getElementById('v-inicio').innerText = p.inicio;
+            document.getElementById('v-termino').innerText = p.fim;
+            document.getElementById('v-dev').innerText = p.dev;
+            document.getElementById('v-tipo').innerText = p.tipo;
+            document.getElementById('v-valor').innerText = `R$ ${parseFloat(p.valor).toLocaleString('pt-BR')}`;
+            document.getElementById('v-pag').innerText = p.pag;
+            document.getElementById('v-img').src = p.img;
+            showSection(2);
+        }
+
+        function openCreate() {
+            currentEditingId = null;
+            document.getElementById('form-title').innerText = "NOVO PROJETO";
+            document.querySelectorAll('#section-3 input').forEach(i => i.value = '');
+            document.getElementById('i-preview').src = "https://via.placeholder.com/80";
+            showSection(3);
+        }
+
+        function openEdit() {
+            const p = projects[currentEditingId];
+            document.getElementById('form-title').innerText = "EDITAR PROJETO";
+            document.getElementById('i-id').value = p.id;
+            document.getElementById('i-nome').value = p.nome;
+            document.getElementById('i-inicio').value = p.inicio;
+            document.getElementById('i-fim').value = p.fim;
+            document.getElementById('i-dev').value = p.dev;
+            document.getElementById('i-tipo').value = p.tipo;
+            document.getElementById('i-valor').value = p.valor;
+            document.getElementById('i-preview').src = p.img;
+            showSection(3);
+        }
+
+        function toggleParcelas() {
+            const val = document.getElementById('i-pag-tipo').value;
+            document.getElementById('i-parcelas').classList.toggle('hidden', val !== 'Parcelado');
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => document.getElementById('i-preview').src = e.target.result;
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function saveProject() {
+            const pagTipo = document.getElementById('i-pag-tipo').value;
+            const parcelas = document.getElementById('i-parcelas').value;
+            const pagFinal = pagTipo === 'Parcelado' ? `Parcelado (${parcelas}x)` : 'À Vista';
+
+            const data = {
+                id: document.getElementById('i-id').value,
+                nome: document.getElementById('i-nome').value,
+                inicio: document.getElementById('i-inicio').value,
+                fim: document.getElementById('i-fim').value,
+                dev: document.getElementById('i-dev').value,
+                tipo: document.getElementById('i-tipo').value,
+                valor: document.getElementById('i-valor').value,
+                pag: pagFinal,
+                img: document.getElementById('i-preview').src
+            };
+
+            if (currentEditingId !== null) {
+                projects[currentEditingId] = data;
+            } else {
+                projects.push(data);
+            }
+            showSection(1);
+        }
+
+        function toggleParcelas() {
+            const select = document.getElementById('i-pag-tipo');
+            const input = document.getElementById('i-parcelas');
+            input.classList.toggle('hidden', select.value !== 'Parcelado');
+        }
+
+        // Iniciar
+        renderList();
+    </script>
+</body>
+</html>

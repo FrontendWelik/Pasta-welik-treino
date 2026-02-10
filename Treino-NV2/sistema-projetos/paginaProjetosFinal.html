@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Projetos Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #05061b; color: #ffffff; font-family: sans-serif; }
+        .bg-sidebar { background-color: #0a0b2e; }
+        .bg-card { background: linear-gradient(145deg, #121440, #0a0b2e); }
+        .gold-border { border: 1px solid rgba(245, 158, 11, 0.3); }
+        .active-tab { background-color: #fbbf24; color: #000; }
+        
+        input, select { 
+            background: #05051a !important; 
+            border: 1px solid rgba(245, 158, 11, 0.4) !important; 
+            color: white; outline: none; padding: 8px; border-radius: 8px;
+        }
+
+        /* Cores de Status */
+        .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
+        .st-verde { background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        .st-azul { background-color: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+        .st-vermelho { background-color: #ef4444; box-shadow: 0 0 8px #ef4444; }
+        .st-preto { background-color: #111111; border: 1px solid #444; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-sidebar border-r border-amber-500/30 flex flex-col p-6 justify-between shrink-0">
+        <div class="space-y-4">
+            <div class="active-tab font-bold py-2 px-6 rounded-full text-center shadow-lg">PROJETOS</div>
+            <div class="text-gray-400 py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer">TIME</div>
+            <div class="text-gray-400 py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer">FINANÇAS</div>
+            <div class="text-gray-400 py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer">LIXEIRA</div>
+        </div>
+        <div class="w-10 h-10 bg-gray-600 rounded-full border gold-border mx-auto flex items-center justify-center">👤</div>
+    </aside>
+
+    <main class="flex-1 p-10 overflow-y-auto">
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold tracking-widest uppercase">Projetos</h1>
+                <input type="text" id="search" onkeyup="filter()" class="rounded-full px-4 py-1 w-48 text-sm" placeholder="Buscar...">
+            </div>
+
+            <div id="sec-1" class="space-y-4">
+                <div id="project-list" class="space-y-4"></div>
+                <div class="flex justify-end mt-8">
+                    <button onclick="openCreate()" class="gold-border text-amber-400 px-8 py-2 rounded-lg text-sm font-bold hover:bg-amber-500 hover:text-black transition">NOVO PROJETO +</button>
+                </div>
+            </div>
+
+            <div id="sec-2" class="hidden">
+                <div class="bg-card gold-border p-8 rounded-3xl relative">
+                    <button onclick="openEdit()" class="absolute top-6 right-6 text-xl hover:scale-110 transition">✏️</button>
+                    
+                    <div class="flex gap-8">
+                        <div class="flex flex-col items-center gap-4">
+                            <img id="v-img" class="w-24 h-24 rounded-full border-2 border-amber-500 object-cover">
+                            <div class="relative group">
+                                <div id="v-status-current" onclick="toggleStatusMenu()" class="dot border border-white/20 scale-125"></div>
+                                <div id="status-menu" class="hidden absolute top-6 left-0 bg-black/90 p-2 rounded-lg flex gap-2 gold-border z-10">
+                                    <div onclick="updateStatus('verde')" class="dot st-verde"></div>
+                                    <div onclick="updateStatus('azul')" class="dot st-azul"></div>
+                                    <div onclick="updateStatus('vermelho')" class="dot st-vermelho"></div>
+                                    <div onclick="updateStatus('preto')" class="dot st-preto"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-x-12 gap-y-4 w-full">
+                            <div><p class="text-gray-500 text-[10px] uppercase">ID#</p><p id="v-id" class="font-bold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Nome</p><p id="v-nome" class="font-bold text-amber-500"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Link</p><a id="v-link" target="_blank" class="text-blue-400 text-xs underline font-bold italic">Abrir Projeto</a></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Desenvolvedor</p><p id="v-dev" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Tipo</p><p id="v-tipo" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Valor</p><p id="v-valor" class="font-semibold"></p></div>
+                            <div><p class="text-gray-500 text-[10px] uppercase">Pagamento</p><p id="v-pag" class="font-semibold"></p></div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="show(1)" class="mt-6 text-gray-500 text-xs hover:text-white">← Voltar para lista</button>
+            </div>
+
+            <div id="sec-3" class="hidden">
+                <div class="bg-card gold-border p-8 rounded-3xl">
+                    <div class="flex items-center gap-4 mb-8 border-b border-amber-500/20 pb-4">
+                        <div class="cursor-pointer relative" onclick="document.getElementById('i-file').click()">
+                            <img id="i-preview" src="" class="w-16 h-16 rounded-full border gold-border object-cover">
+                            <input type="file" id="i-file" class="hidden" onchange="previewImg(this)">
+                        </div>
+                        <h2 class="text-lg font-bold tracking-tighter text-amber-500">CONFIGURAÇÕES DO PROJETO</h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Identificador ID#</label>
+                            <input class="p-2" type="text" id="i-id">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Título do Projeto</label>
+                            <input class="p-2" class="p-2" type="text" id="i-nome">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Link de Acesso</label>
+                            <input class="p-2" type="text" id="i-link">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Responsável Dev</label>
+                            <input class="p-2" type="text" id="i-dev">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Custo Total (R$)</label>
+                            <input class="p-2" type="number" id="i-valor">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-[10px] text-gray-500 uppercase font-bold">Método de Pagamento</label>
+                            <select class="p-2" id="i-pag">
+                                <option value="À Vista">À Vista</option>
+                                <option value="Parcelado">Parcelado</option>
+                            </select>
+                        </div>
+                         <div class="flex flex-col"><label class="text-[10px] text-gray-500 mb-1">TIPO DE PROJETO</label>
+                            <select id="i-tipo" class="p-2 rounded-lg text-sm">
+                                <option value="Landing Page">Landing Page</option>
+                                <option value="E-commerce">E-commerce</option>
+                                <option value="SaaS / Web App">SaaS / Web App</option>
+                                <option value="Portfólio">Portfólio</option>
+                                <option value="Manutenção">Manutenção</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-6 mt-10">
+                        <button onclick="show(1)" class="text-xs font-bold uppercase text-red-500 border border-red-500/50 px-8 py-2 rounded-full hover:bg-red-500 hover:text-white transition">Cancelar</button>
+                        <button onclick="save()" class="text-xs font-bold uppercase bg-green-600 text-white px-10 py-2 rounded-full shadow-lg hover:bg-green-500 transition">Salvar Alterações</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let projects = [
+            { id: "001", nome: "Web App Store", dev: "Marcos",tipo: "Landing Page", valor: "5000", pag: "À Vista", img: "https://i.pravatar.cc/150?u=1", status: "verde", link: "https://meuprojeto.com" }
+        ];
+        let activeIdx = null;
+
+        function show(n) {
+            [1,2,3].forEach(s => document.getElementById(`sec-${s}`).classList.add('hidden'));
+            document.getElementById(`sec-${n}`).classList.remove('hidden');
+            if(n === 1) render();
+        }
+
+        function render(data = projects) {
+            document.getElementById('project-list').innerHTML = data.map((p, i) => `
+                <div onclick="openView(${i})" class="bg-card gold-border p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-amber-500 transition shadow-md">
+                    <div class="flex items-center gap-4">
+                        <img src="${p.img}" class="w-10 h-10 rounded-full border border-amber-500/30 object-cover">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-sm tracking-wider uppercase">${p.nome}</span>
+                            <span class="text-[15px] text-white font-mono mt-3">#ID ${p.id}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] text-gray-600 font-bold uppercase">Status</span>
+                        <div class="dot st-${p.status}"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openView(i) {
+            activeIdx = i;
+            const p = projects[i];
+            document.getElementById('v-img').src = p.img;
+            document.getElementById('v-id').innerText = p.id;
+            document.getElementById('v-nome').innerText = p.nome;
+            document.getElementById('v-dev').innerText = p.dev;
+            document.getElementById('v-tipo').innerText = p.tipo;
+            document.getElementById('v-valor').innerText = `R$ ${parseFloat(p.valor).toLocaleString('pt-BR')}`;
+            document.getElementById('v-pag').innerText = p.pag;
+            document.getElementById('v-link').href = p.link;
+            document.getElementById('v-status-current').className = `dot st-${p.status} scale-125`;
+            show(2);
+        }
+
+        function openEdit() {
+            const p = projects[activeIdx];
+            document.getElementById('i-id').value = p.id;
+            document.getElementById('i-nome').value = p.nome;
+            document.getElementById('i-dev').value = p.dev;
+            document.getElementById('i-valor').value = p.valor;
+            document.getElementById('i-pag').value = p.pag;
+            document.getElementById('i-link').value = p.link;
+            document.getElementById('i-preview').src = p.img;
+            show(3);
+        }
+
+        function openCreate() {
+            activeIdx = null;
+            document.querySelectorAll('#sec-3 input').forEach(inp => inp.value = '');
+            document.getElementById('i-preview').src = "https://via.placeholder.com/80";
+            show(3);
+        }
+
+        function save() {
+            const data = {
+                id: document.getElementById('i-id').value,
+                nome: document.getElementById('i-nome').value,
+                dev: document.getElementById('i-dev').value,
+                 tipo: document.getElementById('i-tipo').value,
+                valor: document.getElementById('i-valor').value,
+                pag: document.getElementById('i-pag').value,
+                link: document.getElementById('i-link').value,
+                img: document.getElementById('i-preview').src,
+                status: activeIdx !== null ? projects[activeIdx].status : "verde"
+            };
+            if(activeIdx !== null) projects[activeIdx] = data;
+            else projects.push(data);
+            show(1);
+        }
+
+        function toggleStatusMenu() {
+            document.getElementById('status-menu').classList.toggle('hidden');
+        }
+
+        function updateStatus(cor) {
+            projects[activeIdx].status = cor;
+            document.getElementById('v-status-current').className = `dot st-${cor} scale-125`;
+            toggleStatusMenu();
+        }
+
+        function previewImg(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => document.getElementById('i-preview').src = e.target.result;
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function filter() {
+            const q = document.getElementById('search').value.toLowerCase();
+            const f = projects.filter(p => p.nome.toLowerCase().includes(q) || p.id.includes(q));
+            render(f);
+        }
+
+        render();
+    </script>
+</body>
+</html>

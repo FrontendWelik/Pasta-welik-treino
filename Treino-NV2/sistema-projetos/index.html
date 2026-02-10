@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Projetos - Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #05061b; color: #ffffff; }
+        .bg-sidebar { background-color: #0a0b2e; }
+        .bg-card { background: linear-gradient(145deg, #121440, #0a0b2e); }
+        .gold-border { border: 1px solid rgba(245, 158, 11, 0.3); }
+        .active-tab { background-color: #fbbf24; color: #000; }
+        input { background: #05051a !important; border: 1px solid rgba(245, 158, 11, 0.4) !important; color: white; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-sidebar border-r border-amber-500/30 flex flex-col p-6 justify-between">
+        <div class="space-y-4">
+            <div class="active-tab font-bold py-2 px-6 rounded-full text-center shadow-lg">PROJETOS</div>
+            <div class="hover:bg-blue-900/30 transition py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer">TIME</div>
+            <div class="hover:bg-blue-900/30 transition py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer">FINANÇAS</div>
+            <div class="hover:bg-blue-900/30 transition py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer">LIXEIRA</div>
+            <div class="hover:bg-blue-900/30 transition py-2 px-6 rounded-full text-center border gold-border font-semibold cursor-pointer">CALENDÁRIO</div>
+        </div>
+        
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center border gold-border">👤</div>
+            <div class="text-amber-500/50">🔍</div>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-10 overflow-y-auto">
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold tracking-widest">PROJETOS</h1>
+                <div class="relative">
+                    <input type="text" class="rounded-full px-4 py-1 w-48 text-sm" placeholder="Buscar...">
+                </div>
+            </div>
+
+            <div id="section-1" class="space-y-4">
+                <div onclick="openView('Projeto Web App', 'R$ 12.000', '10/01/2024', '15/05/2024', 'Marcos Silva', 'Desenvolvimento', 'Pago')" 
+                     class="bg-card gold-border p-4 rounded-xl flex items-center justify-between cursor-pointer hover:scale-[1.01] transition-transform">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-gray-700 p-2 rounded-full">👤</div>
+                        <span class="font-bold">PROJETO WEB APP</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-gray-400 uppercase">Status</span>
+                        <div class="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+                        <button class="ml-4 text-gray-500 hover:text-red-500">🗑️</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-6">
+                    <button onclick="openCreate()" class="gold-border text-amber-400 px-6 py-2 rounded-lg text-sm font-bold hover:bg-amber-500 hover:text-black transition">
+                        NOVO PROJETO +
+                    </button>
+                </div>
+            </div>
+
+            <div id="section-2" class="hidden animate-fadeIn">
+                <div class="bg-card gold-border p-8 rounded-3xl relative">
+                    <button onclick="openEdit()" class="absolute top-6 right-6 text-xl hover:scale-125 transition">✏️</button>
+                    
+                    <div class="flex items-start gap-8">
+                        <div class="flex flex-col items-center gap-4">
+                            <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center text-2xl">👤</div>
+                            <div class="w-5 h-5 rounded-full bg-green-500"></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-x-12 gap-y-6 w-full">
+                            <div><p class="text-gray-500 text-xs uppercase">ID</p><p id="v-id" class="font-semibold">#001</p></div>
+                            <div><p class="text-gray-500 text-xs uppercase">Contato</p><p id="v-contato" class="font-semibold">contato@empresa.com</p></div>
+                            <div><p class="text-gray-500 text-xs uppercase">Início</p><p id="v-inicio" class="font-semibold">10/01/2024</p></div>
+                            <div><p class="text-gray-500 text-xs uppercase">Término</p><p id="v-termino" class="font-semibold">15/05/2024</p></div>
+                            <div><p class="text-gray-500 text-xs uppercase">Desenvolvedor</p><p id="v-dev" class="font-semibold">Marcos Silva</p></div>
+                            <div><p class="text-gray-500 text-xs uppercase">Tipo</p><p id="v-tipo" class="font-semibold">Desenvolvimento</p></div>
+                            <div><p class="text-gray-500 text-xs uppercase">Valor</p><p id="v-valor" class="font-semibold">R$ 12.000</p></div>
+                            <div><p class="text-gray-500 text-xs uppercase">Pagamento</p><p id="v-pag" class="font-semibold">Pago</p></div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="showSection(1)" class="mt-4 text-gray-500 text-sm hover:underline">← Voltar para lista</button>
+            </div>
+
+            <div id="section-3" class="hidden">
+                <div class="bg-card gold-border p-8 rounded-3xl">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">👤</div>
+                        <h2 class="font-bold text-amber-500">EDITAR INFORMAÇÕES</h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">NOME DO PROJETO</label>
+                            <input type="text" id="i-nome" class="p-2 rounded-lg">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">CONTATO</label>
+                            <input type="text" id="i-contato" class="p-2 rounded-lg">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">INÍCIO</label>
+                            <input type="date" id="i-inicio" class="p-2 rounded-lg">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">FIM</label>
+                            <input type="date" id="i-fim" class="p-2 rounded-lg">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">DESENVOLVEDOR</label>
+                            <input type="text" id="i-dev" class="p-2 rounded-lg">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">TIPO</label>
+                            <input type="text" id="i-tipo" class="p-2 rounded-lg">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">VALOR (CUSTO)</label>
+                            <input type="text" id="i-valor" class="p-2 rounded-lg">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs text-gray-400">PAGAMENTO</label>
+                            <input type="text" id="i-pag" class="p-2 rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-4 mt-10">
+                        <button onclick="cancelEdit()" class="border border-red-500 text-red-500 px-8 py-2 rounded-full font-bold hover:bg-red-500 hover:text-white transition uppercase text-sm">Cancelar</button>
+                        <button onclick="saveEdit()" class="bg-green-600 text-white px-8 py-2 rounded-full font-bold hover:bg-green-500 transition uppercase text-sm">Salvar</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Memória para backup
+        let projectData = {
+            id: "#001",
+            nome: "Projeto Web App",
+            contato: "contato@empresa.com",
+            inicio: "2024-01-10",
+            termino: "2024-05-15",
+            dev: "Marcos Silva",
+            tipo: "Desenvolvimento",
+            valor: "R$ 12.000",
+            pag: "Pago"
+        };
+
+        function showSection(num) {
+            [1, 2, 3].forEach(n => document.getElementById(`section-${n}`).classList.add('hidden'));
+            document.getElementById(`section-${num}`).classList.remove('hidden');
+        }
+
+        function openView(nome, valor, inicio, fim, dev, tipo, pag) {
+            // Atualiza a vista com os dados
+            document.getElementById('v-id').innerText = "#001";
+            document.getElementById('v-inicio').innerText = inicio;
+            document.getElementById('v-termino').innerText = fim;
+            document.getElementById('v-dev').innerText = dev;
+            document.getElementById('v-tipo').innerText = tipo;
+            document.getElementById('v-valor').innerText = valor;
+            document.getElementById('v-pag').innerText = pag;
+            showSection(2);
+        }
+
+        function openEdit() {
+            // Preenche os inputs com os dados atuais
+            document.getElementById('i-nome').value = projectData.nome;
+            document.getElementById('i-contato').value = projectData.contato;
+            document.getElementById('i-inicio').value = projectData.inicio;
+            document.getElementById('i-fim').value = projectData.termino;
+            document.getElementById('i-dev').value = projectData.dev;
+            document.getElementById('i-tipo').value = projectData.tipo;
+            document.getElementById('i-valor').value = projectData.valor;
+            document.getElementById('i-pag').value = projectData.pag;
+            showSection(3);
+        }
+
+        function openCreate() {
+            // Limpa os inputs para novo projeto
+            document.querySelectorAll('#section-3 input').forEach(i => i.value = '');
+            showSection(3);
+        }
+
+        function saveEdit() {
+            // Atualiza o objeto de dados com o que está nos inputs
+            projectData.nome = document.getElementById('i-nome').value;
+            projectData.contato = document.getElementById('i-contato').value;
+            projectData.inicio = document.getElementById('i-inicio').value;
+            projectData.termino = document.getElementById('i-fim').value;
+            projectData.dev = document.getElementById('i-dev').value;
+            projectData.tipo = document.getElementById('i-tipo').value;
+            projectData.valor = document.getElementById('i-valor').value;
+            projectData.pag = document.getElementById('i-pag').value;
+
+            // Atualiza a tela de visualização (Parte 2)
+            document.getElementById('v-inicio').innerText = projectData.inicio;
+            document.getElementById('v-termino').innerText = projectData.termino;
+            document.getElementById('v-dev').innerText = projectData.dev;
+            document.getElementById('v-tipo').innerText = projectData.tipo;
+            document.getElementById('v-valor').innerText = projectData.valor;
+            document.getElementById('v-pag').innerText = projectData.pag;
+            
+            showSection(2);
+        }
+
+        function cancelEdit() {
+            // Simplesmente volta para a visualização sem salvar
+            showSection(2);
+        }
+    </script>
+</body>
+</html>
