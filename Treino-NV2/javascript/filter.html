@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    const acessos = [ // minha array 
+  { id: 1, utm_source: 'google', convertido: true },
+  { id: 2, utm_source: 'facebook', convertido: false },
+  { id: 3, utm_source: 'google', convertido: true },
+];
+
+// função da minha array com o parametro lista
+function buscarConversoes(lista) {
+   // pegamos o parametro lista  e filtramos 
+   //damos o nome de acesso na arrow function que ele execute a regra 
+   // a regra é acesso.cenvertido deve ser igual a true
+  return lista.filter(acesso => acesso.convertido === true);
+}
+
+// Executando a função e guardando o resultado
+                  //passando o array (acesso) como argumento para a função 
+const resultado = buscarConversoes(acessos);
+
+// Verificando o que aconteceu
+console.log("--- TESTE DE CONVERSÕES ---");
+console.log("Total de acessos originais:", acessos.length);
+console.log("Total de conversões encontradas:", resultado.length);
+console.table(resultado); // Dica de ouro: .table cria uma tabela visual
+
+</script>
+</html>
